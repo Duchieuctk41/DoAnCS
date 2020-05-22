@@ -1,0 +1,12 @@
+git remote -v   xem kết nối từ xa
+git remote rm origin  xóa kết nối origin
+git remote get-url origin https://github.com/Duchieuctk41/DoAnCS.git  xét lại đường dẫn của kết nối origin
+git branch issue1  tạo branch issue1
+git branch  xem branch * là vị trí branch
+git checkout issue1  chọn branch issue1
+git branch -d issue1  xóa branch issue1
+==========================================
+error: src refspec master does not match any
+error: failed to push some refs to 'https://github.com/Duchieuctk41/DoAnCS.git'  
+- chưa commit đã gửi lên remote
+
