@@ -1,3 +1,10 @@
+const express = require('express');
+const bodyParser = require("body-parser");
+const tabletojson = require("tabletojson").Tabletojson;
+const app = express();
+
+const port = 3000;
+
 const { google } = require('googleapis');
 const { OAuth2 } = google.auth
 
@@ -18,17 +25,51 @@ var read = JSON.parse(readFile);
 
 let events = [];
 
-let a = 2;
-for (let i = 0; i < 7; i++) {
-    let date = new Date();
-    date.setDate(date.getDate() - date.getDay() + i + 1);
-    checkDay(read, i, a, date);
-    returnMorning(read, i, events);
-    returnNoon(read, i, events);
-    returnEvening(read, i, events)
-    a++;
-    run(i);
+
+
+
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({ extended: false }));
+
+app.set('view engine', 'pug');
+app.set('views', './views');
+
+app.get('/', function(req, res) {
+    res.render('index');
+});
+
+app.post('/survey', function(req, res) {
+    let classId = req.body.lop;
+    console.log(classId);
+    getSchedule(classId);
+});
+
+function getSchedule(classId) {
+    const url = ` http://qlgd.dlu.edu.vn/public/DrawingClassStudentSchedules_Mau2?YearStudy=2019-2020&TermID=HK02&Week=21&ClassStudentID=${classId}&t=0.4292294353406918`;
+    return new Promise(resolve => {
+
+        tabletojson.convertUrl(url, { useFirstRowForHeadings: true }, function(
+            tablesAsJson) {
+            var result = tablesAsJson[0];
+            console.log(result);
+            resolve(result);
+        });
+    });
 }
+
+
+
+
+// for (let i = 0; i < 7; i++) {
+//     let date = new Date();
+//     date.setDate(date.getDate() - date.getDay() + i + 1);
+//     checkDay(read, i, a, date);
+//     returnMorning(read, i, events);
+//     returnNoon(read, i, events);
+//     returnEvening(read, i, events)
+//     a++;
+//     run(i);
+// }
 // console.log(events);
 
 
@@ -106,6 +147,10 @@ function run(i) {
         }
     );
 }
+
+app.listen(port, function() {
+    console.log('Server listening on port' + port);
+});
 
 // function runNow(i) {
 //     calendar.freebusy.query({
