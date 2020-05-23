@@ -1,9 +1,10 @@
 const express = require('express');
 const bodyParser = require("body-parser");
 const tabletojson = require("tabletojson").Tabletojson;
+const path = require('path')
 const app = express();
-
-const port = 3000;
+const sinhVienRouter = require('./routes/sinhvien.router');
+const port = 3001;
 
 const { google } = require('googleapis');
 const { OAuth2 } = google.auth
@@ -26,22 +27,29 @@ var read = JSON.parse(readFile);
 let events = [];
 
 
-
-
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 app.set('views', './views');
 
-app.get('/', function(req, res) {
-    res.render('index');
-});
+
+app.use(sinhVienRouter);
+
+// app.set('view engine', 'pug');
+// app.set('views', './views');
+// app.get('/', function(req, res) {
+//     res.render('index');
+// });
+
+
 
 app.post('/survey', function(req, res) {
     let classId = req.body.lop;
     console.log(classId);
     getSchedule(classId);
+    res.render('./ThoiKhoaBieu/ThoiKhoaBieu');
+
 });
 
 function getSchedule(classId) {
@@ -51,58 +59,64 @@ function getSchedule(classId) {
         tabletojson.convertUrl(url, { useFirstRowForHeadings: true }, function(
             tablesAsJson) {
             var result = tablesAsJson[0];
-            console.log(result);
+
+            let a = 2;
+            let b = 0;
+            for (let i = 1; i < 8; i++) {
+                let date = new Date();
+                date.setDate(date.getDate() - date.getDay() + b + 1);
+                checkDay(result, i, a, date);
+                returnMorning(result, i, b);
+                returnNoon(result, i, b);
+                returnEvening(result, i, b);
+                run(b);
+                b++;
+                a++;
+            }
             resolve(result);
         });
     });
 }
 
 
-
-
-// for (let i = 0; i < 7; i++) {
-//     let date = new Date();
-//     date.setDate(date.getDate() - date.getDay() + i + 1);
-//     checkDay(read, i, a, date);
-//     returnMorning(read, i, events);
-//     returnNoon(read, i, events);
-//     returnEvening(read, i, events)
-//     a++;
-//     run(i);
-// }
-// console.log(events);
-
-
-
-function returnMorning(read, i, events) {
-    if (read[i].Sáng != '') {
-        var res = read[i].Sáng.replace("-Môn", "Sáng");
-        res = res.split("-Tiết");
-        events[i].summary += res[0];
+function checkDay(result, i, a, date) {
+    if (result[i]['0'] == 'Thứ ' + a) {
+        events.push(setOfEvent(date));
     } else {
-        events[i].summary += "";
+        events.push(setOfEvent(date));
     }
     return events;
 }
 
-function returnNoon(read, i, events) {
-    if (read[i].Chiều != '') {
-        var res = read[i].Chiều.replace("-Môn", "\nChiều");
+function returnMorning(result, i, b) {
+    if (result[i].Sáng != '') {
+        var res = result[i].Sáng.replace("-Môn", "Sáng");
         res = res.split("-Tiết");
-        events[i].summary += res[0];
+        events[b].summary += res[0];
     } else {
-        events[i].summary += "";
+        events[b].summary += "";
     }
     return events;
 }
 
-function returnEvening(read, i, events) {
-    if (read[i].Tối != '') {
-        var res = read[i].Tối.replace("-Môn", "\nTối");
+function returnNoon(result, i, b) {
+    if (result[i].Chiều != '') {
+        var res = result[i].Chiều.replace("-Môn", `\nChiều`);
         res = res.split("-Tiết");
-        events[i].summary += res[0];
+        events[b].summary += res[0];
     } else {
-        events[i].summary += "";
+        events[b].summary += "";
+    }
+    return events;
+}
+
+function returnEvening(result, i, b) {
+    if (result[i].Tối != '') {
+        var res = result[i].Tối.replace("-Môn", "\nTối");
+        res = res.split("-Tiết");
+        events[b].summary += res[0];
+    } else {
+        events[b].summary += "";
     }
     return events;
 }
@@ -123,14 +137,6 @@ function setOfEvent(dateTime1) {
     return event;
 }
 
-function checkDay(read, i, a, date) {
-    if (read[i].id == 'Thứ ' + a) {
-        events.push(setOfEvent(date));
-    } else {
-        events.push(setOfEvent(date));
-    }
-    return events;
-}
 
 function run(i) {
     if (events[i].summary == '') {
