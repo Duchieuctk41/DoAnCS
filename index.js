@@ -1,10 +1,17 @@
 const express = require('express');
+const app = express();
+const port = 3001;
 const bodyParser = require("body-parser");
 const tabletojson = require("tabletojson").Tabletojson;
 const path = require('path')
-const app = express();
+
 const sinhVienRouter = require('./routes/sinhvien.router');
-const port = 3001;
+
+const axios = require('axios');
+
+
+var createError = require('http-errors')
+
 
 const { google } = require('googleapis');
 const { OAuth2 } = google.auth
@@ -38,18 +45,35 @@ app.use(sinhVienRouter);
 
 // app.set('view engine', 'pug');
 // app.set('views', './views');
-// app.get('/', function(req, res) {
-//     res.render('index');
-// });
 
+var toastr = require('Toastr')
 
-
+function alart(toastr) {
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    }
+    toastr["success"](`Thành công`)
+};
 app.post('/survey', function(req, res) {
     let classId = req.body.lop;
     console.log(classId);
     getSchedule(classId);
+    getAPI(classId);
     res.render('./ThoiKhoaBieu/ThoiKhoaBieu');
-
 });
 
 function getSchedule(classId) {
@@ -69,15 +93,19 @@ function getSchedule(classId) {
                 returnMorning(result, i, b);
                 returnNoon(result, i, b);
                 returnEvening(result, i, b);
-                run(b);
+                // run(b);
                 b++;
                 a++;
             }
+            var finaresult = JSON.stringify(result);
+            fs.writeFileSync('json_demo.json', finaresult, err => {
+                if (err) throw err;
+            });
+            console.log(result);
             resolve(result);
         });
     });
 }
-
 
 function checkDay(result, i, a, date) {
     if (result[i]['0'] == 'Thứ ' + a) {
@@ -154,34 +182,16 @@ function run(i) {
     );
 }
 
+function getAPI(classID) {
+    axios.get('https://clean-glass-pram.glitch.me/?classID=${classId}')
+        .then(function(response) {
+            console.log(response);
+        })
+        .catch(function(error) {
+            console.log(error);
+        })
+}
+
 app.listen(port, function() {
     console.log('Server listening on port' + port);
 });
-
-// function runNow(i) {
-//     calendar.freebusy.query({
-//             resource: {
-
-//                 timeZone: 'America/Denver',
-//                 items: [{ id: 'primary' }],
-//             },
-//         },
-//         (err, res) => {
-//             if (err) return console.error('Free Busy Query Erorr: ', err)
-//             const eventsArr = res.data.calendars.primary.busy
-
-//             if (eventsArr.length === 0)
-//                 return calendar.events.insert({
-//                         calendarId: 'primary',
-//                         resource: events[i]
-//                     },
-//                     err => {
-//                         if (err) return console.error('Calendar Event Creation Error:', err)
-
-//                         return console.log('Calendar Event Created.')
-//                     }
-//                 );
-//             return console.log(`Sorry I'm Busy`)
-//         }
-//     )
-// }

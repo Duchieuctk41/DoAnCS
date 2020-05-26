@@ -1,11 +1,14 @@
 footer#footer {
     bottom: 0;
-    position:absolute;
+    position: fixed;
+    width: 100%;
 }
+
 body {
-    overflow: hidden; 
-    height:100%;
+    overflow: auto;
+    height: 100%;
 }
+
 .container {
-    height: 100vh;
+    /* height: 100vh; */
 }
