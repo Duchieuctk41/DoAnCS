@@ -1,65 +1,17 @@
-<!doctype html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="utf-8">
-    <title></title>
-    <style>
-        div {
-            color: black;
-        }
-    </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.css">
-    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <title>Đang chuyển đến Google calendar trong 2 giây tới</title>
+    <meta http-equiv="refresh" content="5; URL=https://calendar.google.com/calendar/r/month/2020/5/1">
+    <meta name="keywords" content="automatic redirection">
 </head>
 
 <body>
-    <select name="sweets " multiple="multiple ">
-  <option>CTK41</option>
-  <option>CTK42</option>
-  <option>CTK43</option>
-  <option>CTK39</option>
-  <option>CTK40</option>
-  <option>DLK41</option>
-</select>
-    <h1 id="content"></h1>
-
-
-    <script>
-        $("select ").change(function() {
-            var str = " ";
-            $("select option:selected ").each(function() {
-                str += $(this).text() + " ";
-            });
-            alart(str);
-
-            function alart(str) {
-                toastr.options = {
-                    "closeButton": true,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": true,
-                    "positionClass": "toast-top-right",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "300",
-                    "hideDuration": "1000",
-                    "timeOut": "5000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                }
-                toastr["success"](`${str}`)
-            };
-
-
-
-        }).change();
-    </script>
-
+    <h1>Đang chuyển đến Google calendar trong 6 giây tới </h1>
+    <h1>Nếu bạn không muốn đến Google Calendar hãy bấm vào link này để quay lại</h1>
+    <a href="https://calendar.google.com/calendar/r/month/2020/5/1">
+        <h1>Trang chủ</h1>
+    </a>
 </body>
 
 </html>

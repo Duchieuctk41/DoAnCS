@@ -4,7 +4,7 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "nodemon --inspect index.js",
+        "start": "nodemon index.js",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "",
@@ -21,5 +21,8 @@
         "pug": "^2.0.4",
         "tabletojson": "^2.0.4",
         "toastr": "^2.1.4"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.4"
     }
 }

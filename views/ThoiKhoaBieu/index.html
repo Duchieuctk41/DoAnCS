@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Thời khóa biểu</title>
+    <link rel="shortcut icon" type="image/png" href="../../public/image/logoDLU.jpg" />
+    <link rel="stylesheet" type="text/css" href="../../public/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/dashboard.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/toastr.min.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/style.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/user.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/tempusdominus-bootstrap-4.min.css">
+    <link rel="stylesheet" type="text/css" href="../../public/css/admin.css">
+    <link rel="stylesheet" href="../../public/scss/stylesheet.css">
+
+</head>
+<style>
+    .form-group {}
+    
+    .form1 {
+        float: left;
+        margin-right: 100px;
+    }
+    
+    .form2 {
+        float: left;
+    }
+    
+    .backhome {
+        clear: both;
+    }
+</style>
+
+<body>
+    <div class="header">
+        <h1 class="headline">Thêm Thời Khóa Biểu</h1>
+    </div>
+    <!-- navbar -->
+    <div class="body">
+        <div class="container-fluid">
+            <nav class="navbar navbar-inverse">
+                <div class="container-fluid">
+                    <ul class="nav navbar-nav">
+                        <li><a id="len1" class="hoverable" href="#">Thời khóa biểu sinh viên</a></li>
+                        <li><a id="len2" class="hoverable" href="#">Thời khóa biểu lớp</a></li>
+                        <li><a id="len3" class="hoverable" href="#">Thời khóa biểu giảng viên</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- form thoi khoa bieu -->
+    <div class="container">
+        <div class="row row-calendar">
+            <div class="chucnang tdExpandInBounce animated">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="themlichtkb">
+                            <form name="survey" method="post" id="survey" action="/survey">
+                                <div class="form-group ">
+                                    <div class="form1">
+                                        <Label>Xem thời khóa biểu theo sinh viên</Label><br>
+                                        <input type="number" name="lop" id="myInput" placeholder="Nhập mã số sv">
+                                        <button type="button" class="btn btn-success" id="myBtn">Xem Lịch</button><br>
+                                    </div>
+                                    <div class="form2">
+                                        <Label>Xem thời khóa biểu theo lớp</Label><br>
+                                        <input type="number" name="lop" id="myInput" placeholder="Chọn lớp học">
+                                        <select name="lop" id="lop">
+                                          
+                                        </select>
+
+                                    </div>
+                                    <button id="btn_submit " type="submit " class="btn btn-info">Thêm lịch</button>
+                                </div>
+
+                            </form>
+                            <div class=" backhome ">
+                                <a href="../Home/Home.html ">Dùng các chức năng khác</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- thoikhoabieu -->
+    <table class="table table-striped table-dark ">
+    </table>
+
+
+    <!-- phan footer -->
+    <footer id="footer " style="margin-top: 0px !important; ">
+        <div class="row " style="margin: 0 ">
+            <div class="col-md-8 ">
+                <div class="row ">
+                    <div class="col-md-1 offset-md-2 " style="max-width: 100%;padding: 0; ">
+                        <div class="st_text ">
+                            <a href="https://cntt.dlu.edu.vn " target="_blank "><span>D</span><span>L</span></a>
+                        </div>
+                    </div>
+                    <div class="col-md-8 ">
+                        <p>Địa chỉ: Khoa Công Nghệ Thông Tin, <a href="https://cntt.dlu.edu.vn " target="_blank ">Khoa CNTT</a>, <a href="https:/www.dlu.edu.vn " target="_blank ">Trường Đại Học Đà Lạt</a> <br />ĐT: +84263.3552540 - Email: 1710198@dlu.edu.vn
+                            - Website: cntt.dlu.edu.vn
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 " style="text-align: center; ">
+                <p>
+                    Copyright © 2020 <a href="https://dlu.edu.vn " target="_blank ">DLU</a>. All rights reserved
+                </p>
+            </div>
+        </div>
+    </footer>
+    <div id="spinner " class="spinner " style="display: none; "></div>
+
+    <!-- script -->
+    <script src="https://code.jquery.com/jquery-3.5.0.js "></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="./navbar.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js "></script>
+    <script>
+        $(document).ready(function() { // Get value on button click and show alert
+            $("#myBtn ").click(function() {
+                var str = $("#myInput ").val();
+                var thongbao = "Đang lấy thời khóa biểu sinh viên: " + $("#myInput ").val();
+                alert(thongbao);
+                $("table ").html('<tr>Thoi Khoa Bieu</tr>')
+                $.getJSON(`https://future-attractive-rambutan.glitch.me/?studentID=${str}`, function(data) {
+                    $.each(data, function(key, val) {
+                        $('table').append('<tr><th>' + val["0 "] + ' </th><th> ' + val.Sáng + ' </th><th> ' + val
+                            .Chiều + ' </th> <th> ' + val.Tối + ' </th><tr>');
+                    });
+                });
+            });
+        });
+    </script>
+    <script>
+        var tkblop = ['CTK41', 'CTK42', 'CTK43'];
+        tkblop.forEach(element => {
+            console.log(element);
+            $('select').html();
+            $('select').append('<option>' + element + ' </option>')
+        });
+        var llop = 'CTK41'
+            // chontkb(llop);
+
+
+        $("select ").change(function(element) {
+                $("select option:selected ").each(function() {
+                    var str = $(this).val() + " ";
+                    console.log(str);
+                    $("table ").html('<tr> thoi khoa bieu</tr>')
+                    $.getJSON('./k40.json', function(data) {
+                        $.each(data, function(key, val) {
+                            $('table').append('<tr><th>' + val["0 "] + ' </th><th> ' + val.Sáng + ' </th><th> ' + val.Chiều + ' </th> <th> ' + val.Tối + ' </th><tr>');
+                        });
+                    })
+
+
+                })
+            })
+            .change();
+    </script>
+    <script type="text/javascript " src="../../public/js/dashboard.js "></script>
+    <script src="../../public/js/navbar.js"></script>
+</body>
+
+</html>
