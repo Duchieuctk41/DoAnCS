@@ -48,64 +48,14 @@ app.use(sinhVienRouter);
 
 var toastr = require('Toastr')
 
-function alart(toastr) {
-    toastr.options = {
-        "closeButton": true,
-        "debug": false,
-        "newestOnTop": false,
-        "progressBar": true,
-        "positionClass": "toast-top-right",
-        "preventDuplicates": false,
-        "onclick": null,
-        "showDuration": "300",
-        "hideDuration": "1000",
-        "timeOut": "5000",
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
-    }
-    toastr["success"](`Thành công`)
-};
 app.post('/survey', function(req, res) {
-    let classId = req.body.lop;
-    console.log(classId);
-    getSchedule(classId);
-    getAPI(classId);
-    res.render('./ThoiKhoaBieu/ThoiKhoaBieu');
+    let str = req.body.lop;
+    console.log(str);
+    getAPI(str);
+    res.render('./index');
 });
 
-function getSchedule(classId) {
-    const url = ` http://qlgd.dlu.edu.vn/public/DrawingClassStudentSchedules_Mau2?YearStudy=2019-2020&TermID=HK02&Week=21&ClassStudentID=${classId}&t=0.4292294353406918`;
-    return new Promise(resolve => {
 
-        tabletojson.convertUrl(url, { useFirstRowForHeadings: true }, function(
-            tablesAsJson) {
-            var result = tablesAsJson[0];
-
-            let a = 2;
-            let b = 0;
-            for (let i = 1; i < 8; i++) {
-                let date = new Date();
-                date.setDate(date.getDate() - date.getDay() + b + 1);
-                checkDay(result, i, a, date);
-                returnMorning(result, i, b);
-                returnNoon(result, i, b);
-                returnEvening(result, i, b);
-                // run(b);
-                b++;
-                a++;
-            }
-            var finaresult = JSON.stringify(result);
-            fs.writeFileSync('json_demo.json', finaresult, err => {
-                if (err) throw err;
-            });
-            console.log(result);
-            resolve(result);
-        });
-    });
-}
 
 function checkDay(result, i, a, date) {
     if (result[i]['0'] == 'Thứ ' + a) {
@@ -182,10 +132,24 @@ function run(i) {
     );
 }
 
-function getAPI(classID) {
-    axios.get('https://clean-glass-pram.glitch.me/?classID=${classId}')
+function getAPI(str) {
+    axios.get(`https://future-attractive-rambutan.glitch.me/?studentID=${str}`)
         .then(function(response) {
-            console.log(response);
+            console.log(response.data);
+            var result = response.data;
+            let a = 2;
+            let b = 0;
+            for (let i = 1; i < 8; i++) {
+                let date = new Date();
+                date.setDate(date.getDate() - date.getDay() + b + 1);
+                checkDay(result, i, a, date);
+                returnMorning(result, i, b);
+                returnNoon(result, i, b);
+                returnEvening(result, i, b);
+                run(b);
+                b++;
+                a++;
+            }
         })
         .catch(function(error) {
             console.log(error);
@@ -195,3 +159,33 @@ function getAPI(classID) {
 app.listen(port, function() {
     console.log('Server listening on port' + port);
 });
+//function getSchedule(str) {
+//     const url = `https://future-attractive-rambutan.glitch.me/?studentID=${str}`;
+//     return new Promise(resolve => {
+
+//         tabletojson.convertUrl(url, { useFirstRowForHeadings: true }, function(
+//             tablesAsJson) {
+//             var result = tablesAsJson[0];
+
+//             let a = 2;
+//             let b = 0;
+//             for (let i = 1; i < 8; i++) {
+//                 let date = new Date();
+//                 date.setDate(date.getDate() - date.getDay() + b + 1);
+//                 checkDay(result, i, a, date);
+//                 returnMorning(result, i, b);
+//                 returnNoon(result, i, b);
+//                 returnEvening(result, i, b);
+//                 // run(b);
+//                 b++;
+//                 a++;
+//             }
+//             var finaresult = JSON.stringify(result);
+//             fs.writeFileSync('json_demo.json', finaresult, err => {
+//                 if (err) throw err;
+//             });
+//             console.log(result);
+//             resolve(result);
+//         });
+//     });
+// }
