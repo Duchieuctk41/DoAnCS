@@ -9,7 +9,6 @@ const sinhVienRouter = require('./routes/sinhvien.router');
 
 const axios = require('axios');
 
-
 var createError = require('http-errors')
 
 
@@ -28,8 +27,6 @@ oAuth2Client.setCredentials({
 const calendar = google.calendar({ version: "v3", auth: oAuth2Client })
 
 const fs = require('fs');
-const readFile = fs.readFileSync('./json_demo.json', { encoding: 'utf8' });
-var read = JSON.parse(readFile);
 
 let events = [];
 
@@ -43,18 +40,12 @@ app.set('views', './views');
 
 app.use(sinhVienRouter);
 
-// app.set('view engine', 'pug');
-// app.set('views', './views');
-
-var toastr = require('Toastr')
-
 app.post('/survey', function(req, res) {
     let str = req.body.lop;
     console.log(str);
     getAPI(str);
-    res.render('./index');
+    res.render('./direct');
 });
-
 
 
 function checkDay(result, i, a, date) {
@@ -115,7 +106,6 @@ function setOfEvent(dateTime1) {
     return event;
 }
 
-
 function run(i) {
     if (events[i].summary == '') {
         return console.log("nothing today");
@@ -159,33 +149,34 @@ function getAPI(str) {
 app.listen(port, function() {
     console.log('Server listening on port' + port);
 });
-//function getSchedule(str) {
-//     const url = `https://future-attractive-rambutan.glitch.me/?studentID=${str}`;
-//     return new Promise(resolve => {
 
-//         tabletojson.convertUrl(url, { useFirstRowForHeadings: true }, function(
-//             tablesAsJson) {
-//             var result = tablesAsJson[0];
+function getSchedule(str) {
+    const url = `https://future-attractive-rambutan.glitch.me/?studentID=${str}`;
+    return new Promise(resolve => {
 
-//             let a = 2;
-//             let b = 0;
-//             for (let i = 1; i < 8; i++) {
-//                 let date = new Date();
-//                 date.setDate(date.getDate() - date.getDay() + b + 1);
-//                 checkDay(result, i, a, date);
-//                 returnMorning(result, i, b);
-//                 returnNoon(result, i, b);
-//                 returnEvening(result, i, b);
-//                 // run(b);
-//                 b++;
-//                 a++;
-//             }
-//             var finaresult = JSON.stringify(result);
-//             fs.writeFileSync('json_demo.json', finaresult, err => {
-//                 if (err) throw err;
-//             });
-//             console.log(result);
-//             resolve(result);
-//         });
-//     });
-// }
+        tabletojson.convertUrl(url, { useFirstRowForHeadings: true }, function(
+            tablesAsJson) {
+            var result = tablesAsJson[0];
+
+            let a = 2;
+            let b = 0;
+            for (let i = 1; i < 8; i++) {
+                let date = new Date();
+                date.setDate(date.getDate() - date.getDay() + b + 1);
+                checkDay(result, i, a, date);
+                returnMorning(result, i, b);
+                returnNoon(result, i, b);
+                returnEvening(result, i, b);
+                // run(b);
+                b++;
+                a++;
+            }
+            var finaresult = JSON.stringify(result);
+            fs.writeFileSync('json_demo.json', finaresult, err => {
+                if (err) throw err;
+            });
+            console.log(result);
+            resolve(result);
+        });
+    });
+}

@@ -1,5 +1,5 @@
 module.exports.getDanhSach = async(req, res, next) => {
-        return res.render('./ThoiKhoaBieu/ThoiKhoaBieu');
+        return res.render('./tkb');
         // return res.render('./index');
 
 

@@ -9,8 +9,24 @@ footer#footer {
 body {
     overflow: auto;
     height: 100%;
+    font-family: 'Lato', sans-serif;
 }
 
 .container {
     height: 35%;
+}
+
+p::selection {
+    background: #d3d3d3;
+    color: #555;
+}
+
+p::-moz-selection {
+    background: #d3d3d3;
+    color: #555;
+}
+
+p::-webkit-selection {
+    background: #d3d3d3;
+    color: #555;
 }

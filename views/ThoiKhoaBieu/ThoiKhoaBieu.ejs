@@ -17,6 +17,7 @@
     <link rel="stylesheet" type="text/css" href="./css/admin.css">
     <link rel="stylesheet" type="text/css" href="./scss/stylesheet.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
 
 
 </head>
@@ -32,7 +33,6 @@
             <nav class="navbar navbar-inverse">
                 <div class="container-fluid">
                     <ul class="nav navbar-nav">
-
                         <li><a id="len1" class="hoverable" href="#">Thời khóa biểu sinh viên</a></li>
 
                         <li><a id="len2" class="hoverable" href="#">Thời khóa biểu lớp</a></li>
@@ -52,14 +52,15 @@
                         <div class="themlichtkb">
                             <form name="survey" method="post" id="survey" action="/survey">
                                 <div class="form-group ">
-
                                     <h5>Xem thời khóa biểu theo sinh viên:</h5>
                                     <input type="number" name="lop" id="myInput" placeholder="Nhập mã số sv">
-                                    <button type="button" class="btn btn-success" id="myBtn">Xem Lịch</button>
+                                    <button type="button" class="btn btn-success float-right w-25" id="myBtn">Xem Lịch</button>
                                     <h5>Xem thời khóa biểu theo lớp:</h5>
+                                    <!-- select -->
                                     <select name="lop" id="lop"></select>
+                                    <button id="btn_submit" type="submit" class="btn btn-info float-right w-25">Thêm lịch</button>
                                 </div>
-                                <button id="btn_submit" type="submit" class="btn btn-info mt-4 float-right w-25">Thêm lịch</button>
+
                             </form>
                             <div class="backhome">
                                 <a href="../Home/Home.html">Dùng các chức năng khác</a>
@@ -145,9 +146,6 @@
                             });
                         })
                     }
-
-
-
                 })
             })
             .change();
