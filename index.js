@@ -41,31 +41,62 @@ app.set('views', './views');
 app.use(sinhVienRouter);
 
 app.post('/survey', function(req, res) {
-    let str = req.body.lop;
-    console.log(str);
-    getAPI(str);
+    let ms = req.body.lop;
+    let year = req.body.year;
+    let week = req.body.week;
+    console.log(ms, year, week);
+
+    if (isNumber(ms) == true) {
+        getAPI(ms);
+        // pushSchedule(ms);
+    } else {
+        getSchedule(ms, year, week);
+    }
+
     res.render('./direct');
 });
 
+function isNumber(n) {
+    return /^-?[\d.]+(?:e-?\d+)?$/.test(n);
+}
+
+function setTime(date, a) {
+    date.setHours(a);
+    date.setMinutes(0);
+    date.setSeconds(0);
+}
 
 function checkDay(result, i, a, date) {
     if (result[i]['0'] == 'Thứ ' + a) {
+        if (result[i]['Sáng'] != '') {
+            setTime(date, 6);
+        }
+        if (result[i]['Chiều'] != '') {
+            setTime(date, 12);
+        }
+        if (result[i]['Tối'] != '') {
+            setTime(date, 4);
+        }
         events.push(setOfEvent(date));
+        console.log(date);
     } else {
         events.push(setOfEvent(date));
     }
     return events;
 }
 
-function returnMorning(result, i, b) {
+function returnMorning(result, i, b, date) {
     if (result[i].Sáng != '') {
-        var res = result[i].Sáng.replace("-Môn", "Sáng");
-        res = res.split("-Tiết");
+
+
+        res = res.split("-Nhóm");
         events[b].summary += res[0];
+        console.log(res[0]);
+
     } else {
         events[b].summary += "";
     }
-    return events;
+    return events, date;
 }
 
 function returnNoon(result, i, b) {
@@ -73,6 +104,7 @@ function returnNoon(result, i, b) {
         var res = result[i].Chiều.replace("-Môn", `\nChiều`);
         res = res.split("-Tiết");
         events[b].summary += res[0];
+
     } else {
         events[b].summary += "";
     }
@@ -84,6 +116,7 @@ function returnEvening(result, i, b) {
         var res = result[i].Tối.replace("-Môn", "\nTối");
         res = res.split("-Tiết");
         events[b].summary += res[0];
+
     } else {
         events[b].summary += "";
     }
@@ -106,6 +139,10 @@ function setOfEvent(dateTime1) {
     return event;
 }
 
+
+
+
+
 function run(i) {
     if (events[i].summary == '') {
         return console.log("nothing today");
@@ -122,8 +159,8 @@ function run(i) {
     );
 }
 
-function getAPI(str) {
-    axios.get(`https://future-attractive-rambutan.glitch.me/?studentID=${str}`)
+function getAPI(ms) {
+    axios.get(`https://future-attractive-rambutan.glitch.me/?studentID=${ms}`)
         .then(function(response) {
             console.log(response.data);
             var result = response.data;
@@ -150,33 +187,85 @@ app.listen(port, function() {
     console.log('Server listening on port' + port);
 });
 
-function getSchedule(str) {
-    const url = `https://future-attractive-rambutan.glitch.me/?studentID=${str}`;
+function getSchedule(ms, year, week) {
+    var url = `http://online.dlu.edu.vn/Home/DrawingStudentSchedule?StudentId=${ms}&YearId=2019-${year}&TermId=HK02&WeekId=${week}&t=0.13583794914311476`;
     return new Promise(resolve => {
-
         tabletojson.convertUrl(url, { useFirstRowForHeadings: true }, function(
             tablesAsJson) {
             var result = tablesAsJson[0];
-
             let a = 2;
             let b = 0;
             for (let i = 1; i < 8; i++) {
                 let date = new Date();
                 date.setDate(date.getDate() - date.getDay() + b + 1);
+
                 checkDay(result, i, a, date);
                 returnMorning(result, i, b);
                 returnNoon(result, i, b);
                 returnEvening(result, i, b);
-                // run(b);
+                run(b);
                 b++;
                 a++;
             }
-            var finaresult = JSON.stringify(result);
-            fs.writeFileSync('json_demo.json', finaresult, err => {
-                if (err) throw err;
-            });
             console.log(result);
             resolve(result);
         });
     });
+}
+///////////////////////////////////
+function pushSchedule(ms) {
+    axios.get(`https://future-attractive-rambutan.glitch.me/?studentID=${ms}`)
+        .then(function(response) {
+            var result = response.data;
+            for (let i = 0; i < 7; i++) {
+                alarmMorning(result, i);
+                run(i);
+            }
+            console.log(events);
+
+        })
+        .catch(function(error) {
+            console.log(error);
+        })
+}
+
+
+
+function pushEvent(datetime) {
+    let event = {
+        "summary": "",
+        "location": "KTX Dai Hoc Da Lat",
+        "start": {
+            "dateTime": datetime,
+            "timeZone": 'America/Denver',
+        },
+        "end": {
+            "dateTime": datetime,
+            "timeZone": 'America/Denver',
+        }
+    }
+    return event;
+}
+var day = new Date();
+
+function setDayforWeekend(day, a, i) {
+    day.setDate(day.getDate() - day.getDay() + i + 1);
+    day.setHours(a);
+    day.setMinutes(0);
+    day.setSeconds(0);
+    events.push(pushEvent(day));
+    return day;
+}
+
+function alarmMorning(result, i) {
+    if (result[i + 1]['Sáng'] != '') {
+        var res = result[i + 1]['Sáng'].replace("-Môn:", "");
+
+        res = res.split("-Nhóm");
+        setDayforWeekend(day, 6, i)
+        events[i]['summary'] += res[1];
+    } else {
+        setDayforWeekend(day, 6, i);
+    }
+    return events;
 }
