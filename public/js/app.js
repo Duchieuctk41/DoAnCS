@@ -51,29 +51,32 @@ $(function() {
     $(document).ready(function() {
         $('#len2').click(function() {
             $('#title-form').html('Thời Khóa Biểu Giảng Viên');
-            $('#txtb1').html('<label id="maso">Mã số giảng viên :</label> <input type="text" name="lop" placeholder="Nhập Mã Số Giảng Viên">');
+            $('#txtb1').html('<label id="maso">Mã số giảng viên :</label> <input type="text" id="myInput" name="lop" placeholder="Nhập Mã Số Giảng Viên">');
             $('.caption').css("opacity", 0);
             $('.contact-form').css("opacity", 1);
         })
     });
 })
 $(function() {
-        $(document).ready(function() {
-            $('#len3').click(function() {
-                $('#title-form').html('Thời Khóa Biểu Lớp');
-                $('#txtb1').html('<label>Mã Lớp :</label><div class="body "><div class="select "><select name="lop" class="lop"><option disabled selected value>-- Chọn Mã Lớp --</option> <option value="CTK40">CTK40</option><option value="CTK41">CTK41</option> <option value="CTK42">CTK42</option> <option value="CTK43">CTK43</option></select></div></div>')
-                $('.caption').css("opacity", 0);
-                $('.contact-form').css("opacity", 1);
-            })
-        });
-    }) <
+    $(document).ready(function() {
+        $('#len3').click(function() {
+            $('#title-form').html('Thời Khóa Biểu Lớp');
+            $('#txtb1').html('<label>Mã Lớp :</label><div class="body "><div class="select"><select id="myInput" name="lop" class="lop"><option disabled selected value>-- Chọn Mã Lớp --</option> <option value="CTK40">CTK40</option><option value="CTK41">CTK41</option> <option value="CTK42">CTK42</option> <option value="CTK43">CTK43</option></select></div></div>')
+            $('.caption').css("opacity", 0);
+            $('.contact-form').css("opacity", 1);
+        })
+    });
+});
 
-    $(document).ready(function() { // Get value on button click and show alert
-        $("#myBtn").click(function() {
-            var str = $("#myInput").val();
-            var thongbao = "Đang lấy thời khóa biểu sinh viên: " + $("#myInput").val();
-            alert(thongbao);
-
+function isNumber(n) {
+    return /^-?[\d.]+(?:e-?\d+)?$/.test(n);
+}
+$(document).ready(function() { // Get value on button click and show alert
+    $("#myBtn").click(function() {
+        var str = $("#myInput").val();
+        var thongbao = "Đang lấy thời khóa biểu sinh viên: " + $("#myInput").val();
+        alert(thongbao);
+        if (isNumber(str) == true) {
             $("table").html('<tr>Thoi Khoa Bieu</tr>')
             $.getJSON(`https://future-attractive-rambutan.glitch.me/?studentID=${str}`, function(data) {
                 $.each(data, function(key, val) {
@@ -82,5 +85,17 @@ $(function() {
             });
             $('body').css('background', '#5c6664');
             $('body').css('color', 'white');
-        });
+        } else {
+            $("table").html('<tr>Thoi Khoa Bieu</tr>')
+            $.getJSON(`https://resilient-deluxe-caravan.glitch.me/?classStudentID=${str}`, function(data) {
+                $.each(data, function(key, val) {
+                    $('table').append('<tr><th>' + val["0"] + ' </th><th> ' + val.Sáng + ' </th><th> ' + val.Chiều + ' </th> <th> ' + val.Tối + ' </th><tr>');
+                });
+            });
+            $('body').css('background', '#5c6664');
+            $('table').css('color', 'white');
+
+        }
     });
+
+});

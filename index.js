@@ -69,10 +69,10 @@ function setTime(date, a) {
 function checkDay(result, i, a, date) {
     if (result[i]['0'] == 'Thứ ' + a) {
         if (result[i]['Sáng'] != '') {
-            setTime(date, 6);
+            setTime(date, 7);
         }
         if (result[i]['Chiều'] != '') {
-            setTime(date, 12);
+            setTime(date, 13);
         }
         if (result[i]['Tối'] != '') {
             setTime(date, 4);
@@ -88,7 +88,7 @@ function checkDay(result, i, a, date) {
 function returnMorning(result, i, b, date) {
     if (result[i].Sáng != '') {
 
-
+        var res = result[i].Sáng.replace("-Môn", `\nSáng`);
         res = res.split("-Nhóm");
         events[b].summary += res[0];
         console.log(res[0]);
@@ -102,7 +102,7 @@ function returnMorning(result, i, b, date) {
 function returnNoon(result, i, b) {
     if (result[i].Chiều != '') {
         var res = result[i].Chiều.replace("-Môn", `\nChiều`);
-        res = res.split("-Tiết");
+        res = res.split("-Nhóm");
         events[b].summary += res[0];
 
     } else {
@@ -114,7 +114,7 @@ function returnNoon(result, i, b) {
 function returnEvening(result, i, b) {
     if (result[i].Tối != '') {
         var res = result[i].Tối.replace("-Môn", "\nTối");
-        res = res.split("-Tiết");
+        res = res.split("-Nhóm");
         events[b].summary += res[0];
 
     } else {
@@ -188,7 +188,7 @@ app.listen(port, function() {
 });
 
 function getSchedule(ms, year, week) {
-    var url = `http://online.dlu.edu.vn/Home/DrawingStudentSchedule?StudentId=${ms}&YearId=2019-${year}&TermId=HK02&WeekId=${week}&t=0.13583794914311476`;
+    var url = `http://qlgd.dlu.edu.vn/public/DrawingClassStudentSchedules_Mau2?YearStudy=2019-${year}&TermID=HK02&Week=${week}&ClassStudentID=${ms}`;
     return new Promise(resolve => {
         tabletojson.convertUrl(url, { useFirstRowForHeadings: true }, function(
             tablesAsJson) {
@@ -198,7 +198,6 @@ function getSchedule(ms, year, week) {
             for (let i = 1; i < 8; i++) {
                 let date = new Date();
                 date.setDate(date.getDate() - date.getDay() + b + 1);
-
                 checkDay(result, i, a, date);
                 returnMorning(result, i, b);
                 returnNoon(result, i, b);
