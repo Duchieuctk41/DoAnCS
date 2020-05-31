@@ -42,8 +42,8 @@ $(function() {
             $('#title-form').html('Thời Khóa Biểu Sinh Viên');
             $('#txtb1').html('<label id="maso">Mã số sinh viên :</label> <input type="text" id="myInput" name="lop" placeholder="Nhập Mã Số Sinh Viên">')
             $('.caption').css("opacity", 0);
+            $('.contact-form').css("z-index", 0);
             $('.contact-form').css("opacity", 1);
-
         })
     });
 });
@@ -53,6 +53,7 @@ $(function() {
             $('#title-form').html('Thời Khóa Biểu Giảng Viên');
             $('#txtb1').html('<label id="maso">Mã số giảng viên :</label> <input type="text" id="myInput" name="lop" placeholder="Nhập Mã Số Giảng Viên">');
             $('.caption').css("opacity", 0);
+            $('.contact-form').css("z-index", 0);
             $('.contact-form').css("opacity", 1);
         })
     });
@@ -63,6 +64,7 @@ $(function() {
             $('#title-form').html('Thời Khóa Biểu Lớp');
             $('#txtb1').html('<label>Mã Lớp :</label><div class="body "><div class="select"><select id="myInput" name="lop" class="lop"><option disabled selected value>-- Chọn Mã Lớp --</option> <option value="CTK40">CTK40</option><option value="CTK41">CTK41</option> <option value="CTK42">CTK42</option> <option value="CTK43">CTK43</option></select></div></div>')
             $('.caption').css("opacity", 0);
+            $('.contact-form').css("z-index", 0);
             $('.contact-form').css("opacity", 1);
         })
     });
