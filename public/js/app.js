@@ -40,7 +40,7 @@ $(function() {
     $(document).ready(function() {
         $('#len1').click(function() {
             $('#title-form').html('Thời Khóa Biểu Sinh Viên');
-            $('#txtb1').html('<label id="maso">Mã số sinh viên :</label> <input type="text" id="myInput" name="lop" placeholder="Nhập Mã Số Sinh Viên">')
+            $('#txtb1').html('<label id="maso">Mã số sinh viên :</label> <input type="number" id="myInput" name="lop" placeholder="Nhập Mã Số Sinh Viên">')
             $('.caption').css("opacity", 0);
             $('.contact-form').css("z-index", 0);
             $('.contact-form').css("opacity", 1);
@@ -73,31 +73,41 @@ $(function() {
 function isNumber(n) {
     return /^-?[\d.]+(?:e-?\d+)?$/.test(n);
 }
-$(document).ready(function() { // Get value on button click and show alert
+// Get value on button click and show alert
+$(document).ready(function () { 
+
+    
     $("#myBtn").click(function() {
-        var str = $("#myInput").val();
-        var thongbao = "Đang lấy thời khóa biểu sinh viên: " + $("#myInput").val();
-        alert(thongbao);
-        if (isNumber(str) == true) {
-            $("table").html('<tr>Thoi Khoa Bieu</tr>')
-            $.getJSON(`https://future-attractive-rambutan.glitch.me/?studentID=${str}`, function(data) {
-                $.each(data, function(key, val) {
-                    $('table').append('<tr><th>' + val["0"] + ' </th><th> ' + val.Sáng + ' </th><th> ' + val.Chiều + ' </th> <th> ' + val.Tối + ' </th><tr>');
-                });
-            });
-            $('body').css('background', '#5c6664');
-            $('body').css('color', 'white');
-        } else {
-            $("table").html('<tr>Thoi Khoa Bieu</tr>')
-            $.getJSON(`https://resilient-deluxe-caravan.glitch.me/?classStudentID=${str}`, function(data) {
-                $.each(data, function(key, val) {
-                    $('table').append('<tr><th>' + val["0"] + ' </th><th> ' + val.Sáng + ' </th><th> ' + val.Chiều + ' </th> <th> ' + val.Tối + ' </th><tr>');
-                });
-            });
-            $('body').css('background', '#5c6664');
-            $('table').css('color', 'white');
+        var mssv = $("#myInput").val();
+      var thongbao = "Đang lấy thời khóa biểu sinh viên: " + $("#myInput").val();
+      var year = $('select.year').children("option:selected").val();
+      var week = $('select.week').children("option:selected").val();
 
-        }
+        $('#thead').html('');
+          $("#tbody").html('');
+        $.getJSON(`https://absorbing-pollen-diplodocus.glitch.me/?classStudentID=${mssv}&YearStudy=${year}&week=${week}&fbclid=IwAR18tz9MzAPu8Li2HMIcrBE7DgOpxdRhrC9UC6PzS-bfcDY0MScPnsKDWaU`, function(data) {
+              $.each(data, function (key, val) {
+                let sang = ' ';
+                let chieu = ' ';
+                let toi = ' ';
+                let weekend = 'weekend';
+                if (val[0] !== '') {
+                  weekend = val[0];
+                }
+                  if (val.Sáng !== "") {
+                    sang = val.Sáng;
+                    sang = sang.split("tiết");
+                }
+                if (val.Chiều !== "") {
+                  chieu = val.Chiều;
+                  chieu = chieu.split("tiết");
+                }
+                if (val.Tối !== "") {
+                  toi = val.Tối;
+                  toi = toi.split("tiết");
+                }
+                $('#tbody').append('<tr class="row100 head"><th class="cell100 column1">' + weekend + '</th><td class="cell100 column2">' + sang[0] + '</td><td class="cell100 column3">' + chieu[0] + '</td><td class="cell100 column4">' + toi[0] + '</td> </tr>')
+                });
+            });
     });
-
 });
