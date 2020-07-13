@@ -94,8 +94,8 @@
                 <label>Tuần học :</label>
                 <div class="body ">
                     <div class="select">
-                        <select name="week" class="week">
-                <option disabled selected value>-- Chọn Tuần Học --</option>
+                        <select name="week" class="week" id="week">
+                <option disabled selected value id="">-- Chọn Tuần Học --</option>
                 <option value="24">24</option>
                 <option value="23">23</option>
                 <option value="22">22</option>
@@ -320,22 +320,23 @@
         $(window).on('resize', function () {
           ps.update();
         })
-
         $(this).on('ps-x-reach-start', function () {
           $(this).parent().find('.table100-firstcol').removeClass('shadow-table100-firstcol');
         });
-
         $(this).on('ps-scroll-x', function () {
           $(this).parent().find('.table100-firstcol').addClass('shadow-table100-firstcol');
         });
-
       });
-
-
-
-
     </script>
     <!--===============================================================================================-->
     <script src="js/main.js"></script>
 </body>
 </html>
+
+  
+  
+  
+  
+  
+
+  

@@ -20,10 +20,4 @@
 		$(table2).find("."+column).removeClass('hov-column-'+ verTable);
 		$(table1).find(".row100.head ."+column).removeClass('hov-column-head-'+ verTable);
 	});
-    
-
-<<<<<<< HEAD
 })(jQuery);
-=======
-})(jQuery);
->>>>>>> 71446867cdba2af221924e682e316cbcea74529d

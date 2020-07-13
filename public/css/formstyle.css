@@ -5,15 +5,13 @@ body {
     background-color: #fa71cd;
     background-size: cover;
 }
-
-
 /* đang ẩn thuộc tính form*/
 
 .contact-form {
     opacity: 0;
     z-index: -1;
-    width: 85%;
-    max-width: 600px;
+    width: 58%;
+    max-width: 650px;
     background: #f1f1f1;
     position: absolute;
     top: 50%;
@@ -25,8 +23,8 @@ body {
     text-align: center;
     box-shadow: 0 0 20px #000000b3;
     font-family: 'Montserrat', sans-serif;
+    margin-top: 25px;
 }
-
 .contact-form h1 {
     margin-top: 0;
     font-weight: 200;

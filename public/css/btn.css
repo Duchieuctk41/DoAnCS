@@ -80,10 +80,10 @@ b span {
 
 .button .bottom {
     position: absolute;
-    left: 7px;
+    left: 15px;
     top: 7px;
-    width: 100%;
-    height: 100%;
+    width: 83%;
+    height: 83%;
     background-color: #2acdc1;
     display: block;
     -webkit-transition: all .15s ease-out;
